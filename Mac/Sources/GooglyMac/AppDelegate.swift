@@ -15,7 +15,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         Fonts.registerBundled()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.button?.image = MenuIcon.make()
-        statusItem.button?.toolTip = "Bluey"
+        statusItem.button?.toolTip = "Fluffy"
         let menu = NSMenu()
         menu.delegate = self
         statusItem.menu = menu
@@ -131,14 +131,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         server.broadcast(Packet(command: host.awake ? "sleep" : "wake"))
     }
 
-    /// On launch, asks for whatever he still needs (so Bluey shows up in those Settings lists),
+    /// On launch, asks for whatever he still needs (so Fluffy shows up in those Settings lists),
     /// and keeps a small status file so it's easy to check what's allowed.
     private func checkPermissions() {
         guard ProcessInfo.processInfo.environment["GOOGLY_DEMO_OUT"] == nil else { return }
         if settings.computerControl && !ComputerControl.isTrusted { ComputerControl.askForPermission() }
         if !CGPreflightScreenCaptureAccess() { CGRequestScreenCaptureAccess() }
         let status = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Googly/status.txt")
+            .appendingPathComponent("Fluffy/status.txt")
         Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { _ in
             let text = "accessibility=\(ComputerControl.isTrusted) screenRecording=\(CGPreflightScreenCaptureAccess()) computerControl=\(Settings.shared.computerControl)\n"
             try? text.write(to: status, atomically: true, encoding: .utf8)
@@ -305,7 +305,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(show)
 
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "Quit Bluey", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit Fluffy", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
     }
 
     /// Menu item that shows its global shortcut (⌃⌥ + key) when given one.
@@ -323,18 +323,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 }
 
-/// The little blueberry blob with eyes for the menu bar.
+/// A tiny ginger cat face for the menu bar.
 enum MenuIcon {
     static func make() -> NSImage {
         let image = NSImage(size: NSSize(width: 22, height: 18), flipped: true) { rect in
-            let body = NSBezierPath(ovalIn: NSRect(x: 1, y: 2, width: 20, height: 16))
-            NSGradient(colors: Palette.gradient.map { NSColor(hex: $0) })?.draw(in: body, angle: -60)
-            NSColor.white.setFill()
-            NSBezierPath(ovalIn: NSRect(x: 5, y: 6, width: 5.5, height: 5.5)).fill()
-            NSBezierPath(ovalIn: NSRect(x: 11.5, y: 6, width: 5.5, height: 5.5)).fill()
+            let ginger = NSColor(hex: Palette.berry3)
+            ginger.setFill()
+            for ear in [[(2.5, 9.0), (3.5, 0.5), (9.0, 5.0)], [(19.5, 9.0), (18.5, 0.5), (13.0, 5.0)]] {
+                let path = NSBezierPath()
+                path.move(to: NSPoint(x: ear[0].0, y: ear[0].1))
+                path.line(to: NSPoint(x: ear[1].0, y: ear[1].1))
+                path.line(to: NSPoint(x: ear[2].0, y: ear[2].1))
+                path.close()
+                path.fill()
+            }
+            let head = NSBezierPath(ovalIn: NSRect(x: 1.5, y: 3.5, width: 19, height: 14.5))
+            NSGradient(colors: Palette.gradient.map { NSColor(hex: $0) })?.draw(in: head, angle: -60)
+            NSColor(hex: Palette.iris).setFill()
+            NSBezierPath(ovalIn: NSRect(x: 5, y: 8, width: 4.5, height: 4)).fill()
+            NSBezierPath(ovalIn: NSRect(x: 12.5, y: 8, width: 4.5, height: 4)).fill()
             NSColor(hex: Palette.ink).setFill()
-            NSBezierPath(ovalIn: NSRect(x: 6.3, y: 6.8, width: 3, height: 3)).fill()
-            NSBezierPath(ovalIn: NSRect(x: 12.8, y: 6.8, width: 3, height: 3)).fill()
+            NSBezierPath(ovalIn: NSRect(x: 6.7, y: 8, width: 1.2, height: 4)).fill()
+            NSBezierPath(ovalIn: NSRect(x: 14.2, y: 8, width: 1.2, height: 4)).fill()
+            NSColor(hex: Palette.pink).setFill()
+            NSBezierPath(ovalIn: NSRect(x: 10, y: 13, width: 2, height: 1.5)).fill()
             return true
         }
         image.isTemplate = false

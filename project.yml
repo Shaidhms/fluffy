@@ -1,6 +1,6 @@
 name: GooglyEyes
 options:
-  bundleIdPrefix: co.visionairy.googly
+  bundleIdPrefix: com.shaid.fluffy
   deploymentTarget:
     iOS: "17.0"
 settings:
@@ -17,17 +17,17 @@ targets:
       - path: Shared
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: co.visionairy.googly.phone
-        PRODUCT_NAME: Bluey
+        PRODUCT_BUNDLE_IDENTIFIER: com.shaid.fluffy.phone
+        PRODUCT_NAME: Fluffy
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: YES
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: NF73NSV867
-        # Set your team in Xcode (Signing & Capabilities) the first time you run it.
+        DEVELOPMENT_TEAM: ""
+        # Pick your own team in Xcode (Signing & Capabilities) the first time you run it.
     info:
       path: iOS/Info.plist
       properties:
-        CFBundleDisplayName: Bluey
+        CFBundleDisplayName: Fluffy
         UILaunchScreen: {}
         UIRequiresFullScreen: true
         UIStatusBarHidden: true
@@ -35,10 +35,10 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        NSLocalNetworkUsageDescription: Bluey finds the Mac app on your Wi-Fi so the character can look where it points.
-        NSMicrophoneUsageDescription: Talk to your blueberry. He listens while he's awake (double tap him to wake him up or put him to sleep).
+        NSLocalNetworkUsageDescription: Fluffy finds the Mac app on your Wi-Fi so the character can look where it points.
+        NSMicrophoneUsageDescription: Talk to your cat. He listens while he's awake (double tap him to wake him up or put him to sleep).
         NSBonjourServices:
-          - _googly._tcp
+          - _fluffy._tcp
         UIAppFonts:
           - Fredoka.ttf
           - IBMPlexSans.ttf

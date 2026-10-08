@@ -91,14 +91,16 @@ enum ScreenReader {
         let size = CGSize(width: display.width, height: display.height)
         // Read the front app's controls at the same time as the text.
         let controlsTask = Task.detached(priority: .userInitiated) { ControlsReader.read(screen: size) }
-        let lines = try recognize(image, in: size)
+        // If text recognition fails he can still see the screenshot; he just has no text ids to point at.
+        let lines = (try? recognize(image, in: size)) ?? []
         let controls = await controlsTask.value
         return ScreenSnapshot(jpeg: jpeg(image, maxEdge: 1100), lines: lines, size: size, app: controls.app, controls: controls.controls)
     }
 
     static func recognize(_ image: CGImage, in size: CGSize) throws -> [(line: Target, words: [Target])] {
         let request = VNRecognizeTextRequest()
-        request.recognitionLevel = .accurate
+        // .accurate hangs ~26 s and then fails (E5RT compile error) on macOS 27; .fast reads screen text fine.
+        request.recognitionLevel = .fast
         request.usesLanguageCorrection = true
         try VNImageRequestHandler(cgImage: image).perform([request])
 

@@ -421,6 +421,34 @@ final class TeardropLayer: CALayer {
         ctx.translateBy(x: padding, y: padding)
         let path = Teardrop.path(size: s, tipRadius: 6 * k)
 
+        // Fluffy's cat ears, on the round side opposite the tip.
+        let center = CGPoint(x: s / 2, y: s / 2)
+        func polar(_ angle: CGFloat, _ radius: CGFloat) -> CGPoint {
+            CGPoint(x: center.x + cos(angle) * radius, y: center.y + sin(angle) * radius)
+        }
+        for degrees in [-78.0, -12.0] {
+            let a = CGFloat(degrees) * .pi / 180
+            for (spread, reach, color, rim) in [(0.3, 0.78, NSColor(hex: Palette.berry3), true), (0.17, 0.66, NSColor(hex: Palette.pink), false)] {
+                let ear = CGMutablePath()
+                ear.move(to: polar(a - spread, s * 0.4))
+                ear.addLine(to: polar(a, s * reach))
+                ear.addLine(to: polar(a + spread, s * 0.4))
+                ear.closeSubpath()
+                ctx.saveGState()
+                ctx.addPath(ear)
+                ctx.setLineJoin(.round)
+                if rim {
+                    ctx.setStrokeColor(NSColor.white.cgColor)
+                    ctx.setLineWidth(8 * k)
+                    ctx.drawPath(using: .stroke)
+                    ctx.addPath(ear)
+                }
+                ctx.setFillColor(color.cgColor)
+                ctx.fillPath()
+                ctx.restoreGState()
+            }
+        }
+
         ctx.saveGState()
         if glow {
             ctx.setShadow(offset: .zero, blur: 30 * k, color: NSColor(hex: Palette.berry2, alpha: 0.7).cgColor)

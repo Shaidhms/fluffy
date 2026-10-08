@@ -1,14 +1,14 @@
 import Foundation
 
 /// Turns recorded audio into a proper transcript (with speaker labels) and keeps each session's
-/// meeting notes as plain files any agent can read: ~/Documents/Bluey Notes/<date> <id>/.
+/// meeting notes as plain files any agent can read: ~/Documents/Fluffy Notes/<date> <id>/.
 enum MeetingNotes {
     static let model = "gpt-4o-transcribe-diarize"
     static let fallbackModel = "gpt-transcribe"
 
     static var root: URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Bluey Notes", isDirectory: true)
+            .appendingPathComponent("Fluffy Notes", isDirectory: true)
     }
 
     struct Segment {
@@ -40,14 +40,14 @@ enum MeetingNotes {
         let url = root.appendingPathComponent("README.md")
         guard !FileManager.default.fileExists(atPath: url.path) else { return }
         let text = """
-        # Bluey Notes
+        # Fluffy Notes
 
-        Meeting notes recorded by Riley's Bluey app (the blueberry on the iPhone). One folder per listening \
+        Meeting notes recorded by your Fluffy app (the ginger cat on the iPhone). One folder per listening \
         session, named by start time.
 
         In each session folder:
-        - `notes.md`: the full transcript with timestamps and speaker labels, plus Riley's questions to Bluey, \
-        Bluey's replies and any research reports, in time order. Start here.
+        - `notes.md`: the full transcript with timestamps and speaker labels, plus your questions to Fluffy, \
+        Fluffy's replies and any research reports, in time order. Start here.
         - `session.json`: the same data, structured.
         - `audio/`: the raw recording, as five-minute AAC chunks.
 
@@ -148,7 +148,7 @@ enum MeetingNotes {
         let clock = DateFormatter()
         clock.dateFormat = "h:mm:ss a"
 
-        var out = ["# Bluey session: \(day.string(from: started))", ""]
+        var out = ["# Fluffy session: \(day.string(from: started))", ""]
         if let ended {
             let minutes = Int(ended.timeIntervalSince(started) / 60)
             out.append("Ended \(clock.string(from: ended)) (\(minutes / 60)h \(minutes % 60)m).")
@@ -157,7 +157,7 @@ enum MeetingNotes {
         }
         if pending > 0 { out.append("\(pending) recording chunk(s) still being transcribed; this file updates when they're done.") }
         let asked = entries.filter { $0["kind"] as? String == "asked" }.count
-        if asked > 0 { out.append("Riley asked Bluey \(asked) question(s); they're marked inline below.") }
+        if asked > 0 { out.append("You asked Fluffy \(asked) question(s); they're marked inline below.") }
         out += ["", "## Transcript", ""]
 
         for entry in entries {
@@ -170,9 +170,9 @@ enum MeetingNotes {
             case "heard":
                 out.append("[\(time)] (live) \(text)")
             case "asked":
-                out.append("> **[\(time)] Riley asked Bluey:** \(text)")
+                out.append("> **[\(time)] You asked Fluffy:** \(text)")
             case "reply":
-                out.append("> **Bluey:** \(text)")
+                out.append("> **Fluffy:** \(text)")
             case "report":
                 let quoted = text.components(separatedBy: "\n").map { "> " + $0 }.joined(separator: "\n")
                 out.append("> **Research report:**\n" + quoted)

@@ -86,7 +86,7 @@ final class LiveVoice: NSObject, ObservableObject {
         AVAudioApplication.requestRecordPermission { granted in
             DispatchQueue.main.async {
                 guard granted else {
-                    self.onCaption?("I need the microphone. Turn it on for Bluey in the iPhone's Settings.", true)
+                    self.onCaption?("I need the microphone. Turn it on for Fluffy in the iPhone's Settings.", true)
                     self.wantAwake = false
                     self.setState(.asleep)
                     return

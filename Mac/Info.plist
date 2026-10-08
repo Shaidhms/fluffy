@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>Bluey</string>
+	<string>Fluffy</string>
 	<key>CFBundleDisplayName</key>
-	<string>Bluey</string>
+	<string>Fluffy</string>
 	<key>CFBundleIdentifier</key>
-	<string>co.visionairy.googly.mac</string>
+	<string>com.shaid.fluffy.mac</string>
 	<key>CFBundleExecutable</key>
 	<string>GooglyMac</string>
 	<key>CFBundlePackageType</key>
@@ -21,14 +21,14 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Bluey talks to the character on your iPhone over your local network.</string>
+	<string>Fluffy talks to the character on your iPhone over your local network.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Hold ⌥Space and talk to ask Bluey a question.</string>
+	<string>Hold ⌥Space and talk to ask Fluffy a question.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Bluey turns what you say into text so it can answer you.</string>
+	<string>Fluffy turns what you say into text so it can answer you.</string>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_googly._tcp</string>
+		<string>_fluffy._tcp</string>
 	</array>
 </dict>
 </plist>

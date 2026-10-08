@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// Bluey's own app screen: start or end a session, see past sessions and their transcripts, and settings.
+/// Fluffy's own app screen: start or end a session, see past sessions and their transcripts, and settings.
 /// Opened from the faint button in the top-right corner of his face.
-struct BlueyAppView: View {
+struct FluffyAppView: View {
     @ObservedObject var store: SessionStore
     @ObservedObject var live: LiveVoice
     @ObservedObject var link: MacLink
@@ -34,10 +34,10 @@ struct BlueyAppView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 HStack(spacing: 12) {
-                    MiniBluey()
+                    MiniFluffy()
                         .frame(width: 54, height: 48)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Bluey")
+                        Text("Fluffy")
                             .font(.fredoka(28))
                             .foregroundStyle(.white)
                         HStack(spacing: 6) {
@@ -183,7 +183,7 @@ struct BlueyAppView: View {
 }
 
 private struct SessionRow: View {
-    let session: BlueySession
+    let session: FluffySession
     let live: Bool
 
     var body: some View {
@@ -234,19 +234,19 @@ struct SessionDetailView: View {
     @State private var copied = false
 
     /// A prompt for an agent (like Claude Code on the Mac) that points it at this session's notes files.
-    private func copyPrompt(_ session: BlueySession) {
-        let root = "~/Documents/Bluey Notes"
+    private func copyPrompt(_ session: FluffySession) {
+        let root = "~/Documents/Fluffy Notes"
         let path = session.notesPath.map { p -> String in
             // Show the Mac path with ~ for the home folder.
-            if let range = p.range(of: "/Documents/Bluey Notes") { return "~" + p[range.lowerBound...] }
+            if let range = p.range(of: "/Documents/Fluffy Notes") { return "~" + p[range.lowerBound...] }
             return p
         } ?? "\(root)/ (the folder starting \(session.started.formatted(.iso8601.year().month().day())))"
         let prompt = """
-        I recorded a meeting with my Bluey app on \(session.started.formatted(date: .complete, time: .shortened)). \
+        I recorded a meeting with my Fluffy app on \(session.started.formatted(date: .complete, time: .shortened)). \
         The notes are on my Mac in \(path)
 
         - notes.md: the full transcript with timestamps and speaker labels (A, B, … per five-minute chunk), plus \
-        my questions to Bluey, its replies and research reports. Start here.
+        my questions to Fluffy, its replies and research reports. Start here.
         - session.json: the same data, structured.
         - audio/: the original recording in five-minute chunks.
 
@@ -261,7 +261,7 @@ struct SessionDetailView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { copied = false }
     }
 
-    private var session: BlueySession? { store.sessions.first { $0.id == id } }
+    private var session: FluffySession? { store.sessions.first { $0.id == id } }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -381,7 +381,7 @@ private struct EntryView: View {
             }
         case .reply:
             HStack(alignment: .bottom, spacing: 8) {
-                MiniBluey().frame(width: 28, height: 25)
+                MiniFluffy().frame(width: 28, height: 25)
                 Text(entry.text)
                     .font(.fredoka(16))
                     .foregroundStyle(Color(hex: Palette.ink))
@@ -423,23 +423,14 @@ private struct EntryView: View {
     }
 }
 
-/// A tiny Bluey: the blob with two googly eyes.
-struct MiniBluey: View {
+/// A tiny Fluffy, for the app screen.
+struct MiniFluffy: View {
     var body: some View {
-        GeometryReader { geo in
-            let w = geo.size.width
-            ZStack {
-                BlobShape().fill(BlobShape.linear)
-                HStack(spacing: w * 0.1) {
-                    ForEach(0..<2, id: \.self) { _ in
-                        Circle()
-                            .fill(.white)
-                            .frame(width: w * 0.26, height: w * 0.26)
-                            .overlay(Circle().fill(Color(hex: Palette.ink)).frame(width: w * 0.12).offset(x: w * 0.02, y: w * 0.03))
-                    }
-                }
-                .offset(y: -w * 0.04)
-            }
+        // The real face, drawn small and happy.
+        Canvas { ctx, size in
+            let frame = FaceAnimator.Frame(gaze: .zero, mood: .happy, talk: 0, closed: 0, breathe: 0, time: 1.2, pupil: 1.2,
+                                           browLift: 16, browTilt: 0, lean: 0, hop: 0, blush: 0.85, squint: 1)
+            FaceView.drawIcon(frame, in: &ctx, size: size)
         }
     }
 }

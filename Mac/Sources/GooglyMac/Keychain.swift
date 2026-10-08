@@ -1,6 +1,6 @@
 import Foundation
 
-/// API keys live in a private file in ~/Library/Application Support/Googly (readable only by you),
+/// API keys live in a private file in ~/Library/Application Support/Fluffy (readable only by you),
 /// never in the project folder or git. Unlike the Keychain, this never asks for your password.
 enum Keychain {
     enum Key: String {
@@ -11,7 +11,7 @@ enum Keychain {
 
     private static var fileURL: URL {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Googly", isDirectory: true)
+            .appendingPathComponent("Fluffy", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true,
                                                  attributes: [.posixPermissions: 0o700])
         return dir.appendingPathComponent("keys.json")

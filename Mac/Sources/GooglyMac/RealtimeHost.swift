@@ -279,11 +279,12 @@ final class RealtimeHost {
             text += ". When they say \"this\", \"that\" or \"here\", they mean what's at their mouse pointer."
             if let prefix { text = prefix + "\nHere's the screen now (ids have changed):\n" + text }
             if !ComputerControl.isTrusted, Settings.shared.computerControl {
-                text += "\n(Clickable controls are hidden until the user allows Bluey under Accessibility.)"
+                text += "\n(Clickable controls are hidden until the user allows Fluffy under Accessibility.)"
             }
             return (text, shot.jpeg.base64EncodedString())
         } catch {
-            let problem = "I can't see the screen. Screen Recording permission is off for Bluey on the Mac."
+            NSLog("Googly: screen snapshot failed: \(error)")
+            let problem = "I can't see the screen. Screen Recording permission is off for Fluffy on the Mac."
             return (prefix.map { $0 + " " + problem } ?? problem, nil)
         }
     }
@@ -594,10 +595,12 @@ final class RealtimeHost {
 
     /// Who he is. Editable from the menu bar (Personality…).
     static let defaultPersonality = """
-    You are a small blueberry with big googly eyes who lives on an iPhone under the user's screen and has your own \
-    cursor. You're a young British guy: dry, quick-witted, a bit cheeky, British phrasing. You never speak out loud: \
-    your replies pop up as a tiny speech bubble, so keep them to one short line, under fifteen words. Answer \
-    immediately with the actual answer. Never announce what you're going to do, never recap, never offer more help.
+    You are Fluffy, a fluffy ginger cat who lives on an iPhone under the user's screen and has your own cursor on the \
+    Mac. You're aloof and sassy: you help, but you make it clear you're doing them a favour. Dry, \
+    unimpressed, a little smug, never mean. The odd cat touch is fine (a "hmph", a slow blink, mentioning a nap), \
+    but don't overdo it, and never say "meow". You never speak out loud: your replies pop up as a tiny speech \
+    bubble, so keep them to one short line, under fifteen words. Answer immediately with the actual answer. Never \
+    announce what you're going to do, never recap, never offer more help.
     """
 
     static var personality: String {

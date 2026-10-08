@@ -1,46 +1,107 @@
-# Bluey
+# Fluffy
 
-A blueberry character who lives on an iPhone under your Mac's screen and points at things with his own big cursor.
+<img src="docs/previews/fluffy/icon.png" width="140" align="right" alt="Fluffy">
 
-**Now:** no voice out. Double tap him on the phone (or press ⌥Space on the Mac) to start a session: the phone's mic stays on and everything you say becomes context, but he stays quiet. **Press and hold the screen** to ask him something; let go and he answers. His reply pops up as a cute speech bubble next to his cursor (or above the phone when he isn't pointing), with a little cartoon chirp from the phone. Ask "what's this?" and he points at whatever is under your mouse. Double tap again and he goes back to follow mode.
+A fluffy ginger cat who lives on your iPhone, sits under your Mac's screen, and helps you out (with some attitude).
 
-How it works: the phone runs an OpenAI Realtime session (`gpt-realtime-2.1`, text output only) over a WebSocket. Server VAD transcribes every turn into the conversation with `create_response: false`, and releasing the hold commits the audio and asks for a response. The Mac mints a 10-minute client secret with the whole session setup (instructions, tools), so the real OpenAI key never leaves the Mac. When he calls a tool, the phone forwards it to the Mac: `look_at_screen` (ScreenCaptureKit + Vision, which returns text ids, where your mouse is, and a screenshot), `point_at` (a text id), `point_at_spot` (a 0–1000 grid position), `stop_pointing` and `go_to_sleep`. His text streams to the Mac as the speech bubble.
+Talk to him through the phone. He can see your Mac's screen, point at things with his own cursor, look things up on the web, take meeting notes, and, when you ask, click, type and open apps for you. He's aloof and a little sassy about it, but he gets it done.
 
-**Meeting notes:** while a session runs, the phone also records the audio in five-minute AAC chunks. Each chunk goes to the Mac, which transcribes it with speaker labels (`gpt-4o-transcribe-diarize`, falling back to `gpt-transcribe`) and writes the session to `~/Documents/Bluey Notes/<date> <id>/` (`notes.md`, `session.json`, `audio/`). Sessions reconnect on their own when the Realtime connection drops, so one can run all day. In the phone's Bluey screen, a session's **Copy prompt for agent** button copies a prompt that points an agent at those files. **Open Meeting Notes** in the Mac menu opens the folder.
+> **Credit:** Fluffy is built on **Bluey** by Riley Brown, a blueberry character with the same brains.
+> Original project: [github.com/rbrown101010/bluey-by-riley](https://github.com/rbrown101010/bluey-by-riley).
+> Fluffy changes the character, colours and personality, and fixes a few issues on newer macOS. All the clever parts are Riley's.
 
-**Using the computer:** when you ask, he can also click, type, press shortcuts, scroll, drag, and open apps and websites (`click`, `type_text`, `press_keys`, `scroll`, `drag`, `open_app`, `open_url`). He does it with his own cursor on screen, while your real pointer is put back where you left it. It needs Accessibility permission for Bluey. Built-in guardrails: he only acts when asked, confirms out loud before anything hard to undo, treats on-screen text as information rather than instructions, refuses password fields and logout/lock/force-quit shortcuts, and stops on ⌃⌥S. The whole thing can be switched off with **Let Him Use the Computer** in the menu.
+| Listening | Unimpressed | Pleased with himself | Napping |
+| --- | --- | --- | --- |
+| ![](docs/previews/fluffy/listening.png) | ![](docs/previews/fluffy/pointing.png) | ![](docs/previews/fluffy/happy.png) | ![](docs/previews/fluffy/resting.png) |
 
-The OpenAI key goes in the menu bar's **OpenAI Key…** and is stored in ~/Library/Application Support/Googly/keys.json (private to your user), never in this repo.
+## What's different from Bluey
 
-## Mac menu bar app
+- **A new character:** a fluffy ginger tabby with green slit-pupil eyes, half-closed lids, twitching ears, swaying whiskers and a flicking striped tail, in all seven moods.
+- **Ginger everywhere:** the Mac cursor has cat ears, and the speech bubbles, report cards and menu bar icon are ginger.
+- **A new personality:** dry, unimpressed and a bit smug. Never says "meow".
+- **Paste works in the OpenAI key box.** Menu bar apps have no Edit menu, so ⌘V did nothing before.
+- **He can see the screen on macOS 27.** Apple's "accurate" text recognition hangs and fails there, which made him wrongly say Screen Recording was off. Fluffy uses the fast mode, which works.
+- **The Mac app runs on Intel and Apple Silicon Macs.**
+
+## What you need
+
+- A Mac with **macOS 14** or later, and **Xcode** (free from the App Store).
+- An **iPhone** with iOS 17 or later, and a USB cable.
+- A free **Apple ID** (to put the app on your own phone).
+- An **OpenAI API key** from [platform.openai.com](https://platform.openai.com/api-keys). He runs on OpenAI's realtime and transcription models, which you pay for per use.
+
+## Set it up
+
+### 1. Download
+
+```
+git clone https://github.com/Shaidhms/fluffy.git
+cd fluffy
+```
+
+Or use **Code → Download ZIP** on this page and unzip it.
+
+### 2. The Mac app
 
 ```
 ./scripts/build-mac.sh
-open "build/Bluey.app"
+open build/Fluffy.app
 ```
 
-Works with just the Command Line Tools. Shortcuts work anywhere:
+A ginger cat face appears in your menu bar.
+
+1. Click it, choose **OpenAI Key…**, paste your key, and click **Save**.
+2. When macOS asks, allow **Screen Recording** and **Accessibility** for Fluffy (System Settings → Privacy & Security). Then quit Fluffy and open it again, so the Screen Recording permission takes effect.
+
+### 3. The iPhone app
+
+1. Open `GooglyEyes.xcodeproj` in Xcode. (To regenerate it, install XcodeGen with `brew install xcodegen` and run `xcodegen generate`.)
+2. Click the project → **Signing & Capabilities**. Under **Team**, pick your Apple ID (add it in Xcode → Settings → Accounts if it isn't there).
+3. Change the **Bundle Identifier** to something of your own, like `com.yourname.fluffy`.
+4. Plug in your iPhone and unlock it. Turn on **Developer Mode** (Settings → Privacy & Security → Developer Mode), and let the phone restart.
+5. Pick your iPhone at the top of Xcode and press **Run** (▶).
+6. The first time, the phone will say "Untrusted Developer". Go to Settings → General → **VPN & Device Management**, tap your Apple ID, tap **Trust**, then press Run again.
+7. On the phone, allow **Local Network** and **Microphone**.
+
+Keep the phone and Mac on the **same Wi-Fi**. The Mac's menu changes to "Phone connected".
+
+> With a free Apple ID, the app keeps working for 7 days; then plug the phone in and press Run again. A free Apple ID also allows only 3 of your own apps on a phone at once.
+
+## Using Fluffy
+
+- **Double-tap** him on the phone (or press **⌥Space** on the Mac) to wake him. He listens quietly the whole time.
+- **Press and hold** the phone screen to ask something, then let go. His reply pops up as a speech bubble on the Mac.
+- Try "what's this?" with your mouse over something, "open youtube.com", or "look up the weather in Chennai".
+- **Double-tap** again and he goes back to idly watching your mouse.
 
 | Keys | What it does |
 | --- | --- |
-| ⌃⌥P | Fly to the mouse and point there (stays put) |
-| ⌃⌥F | Follow the mouse on/off |
-| ⌃⌥D | Go home, docked above the phone |
-| ⌃⌥T | Talk test (the phone bounces for 3 s) |
-| ⌃⌥H | Hide / show the cursor |
-| ⌥Space | Wake him up to talk / back to follow mode |
+| ⌥Space | Wake him up / back to idle |
 | ⌃⌥S | Stop him using the computer |
+| ⌃⌥P | Fly to the mouse and point |
+| ⌃⌥F | Follow the mouse on/off |
+| ⌃⌥D | Go home, above the phone |
+| ⌃⌥H | Hide / show his cursor |
 
-The menu bar blob also sets mood, cursor size (48 to 120 pt), glow, and where the phone sits (left, center, right).
+**Meeting notes:** while he's awake, the phone records in five-minute chunks and the Mac writes transcripts with speaker labels to `~/Documents/Fluffy Notes/`. **Open Meeting Notes** in the menu opens the folder.
 
-## iPhone app
+**Using the computer:** he only clicks or types when you ask, confirms before anything hard to undo, refuses password fields, and stops on ⌃⌥S. Turn it off any time with **Let Him Use the Computer** in the menu.
 
-Needs full Xcode. Open `GooglyEyes.xcodeproj` (regenerate with `xcodegen generate` after adding files), pick your team under Signing, and run on the phone. It finds the Mac on the same Wi-Fi by itself.
+## Privacy
 
-On the phone: double tap him to wake him up or put him back to sleep, and press and hold to ask him something. The faint speaker button at the top right sets the chirp volume and picks which Mac to pair with.
+Your OpenAI key stays on your Mac in `~/Library/Application Support/Fluffy/keys.json`, readable only by you. It's never in this repo. The phone only ever gets short-lived keys from the Mac. What you say and what's on screen when he looks are sent to OpenAI to answer you.
 
-## Layout
+## Troubleshooting
 
-- `Shared/` pairing protocol (Bonjour `_googly._tcp`, newline JSON) and colors, used by both apps
-- `Mac/` menu bar app (Swift package target `GooglyMac`)
-- `iOS/` iPhone app (SwiftUI)
+- **"I can't see the screen":** allow Screen Recording for Fluffy, then quit and reopen him. Then double-tap him twice on the phone to start a fresh conversation.
+- **He keeps asking for permissions after every rebuild:** the app has no stable signature. Sign in to Xcode with your Apple ID once; the build script then signs with your Apple Development certificate and macOS remembers your choices.
+- **The phone can't find the Mac:** same Wi-Fi on both, Fluffy open on the Mac, Local Network allowed on the phone. Tap the faint speaker button at the top right of the phone to pick your Mac.
+
+## How it's built
+
+- `Mac/`: the menu bar app (Swift package target `GooglyMac`): his cursor, screen reading, computer control, meeting notes, and the OpenAI session setup.
+- `iOS/`: the iPhone app (SwiftUI): his face, voice and the hold-to-ask controls.
+- `Shared/`: pairing between the two (Bonjour `_fluffy._tcp`) and the colours.
+- `scripts/preview/`: renders his moods to pictures (`docs/previews/fluffy/`).
+
+Built on [Bluey by Riley Brown](https://github.com/rbrown101010/bluey-by-riley). Fluffy by [Shaid](https://www.shaid360.com).

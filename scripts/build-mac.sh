@@ -1,17 +1,19 @@
 #!/bin/zsh
-# Builds "Bluey.app" into build/ from the Swift package. Works with just the Command Line Tools.
+# Builds "Fluffy.app" into build/ from the Swift package. Works with just the Command Line Tools.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-swift build -c release --product GooglyMac
+# Universal: runs on Apple Silicon and Intel Macs.
+ARCHS=(--arch arm64 --arch x86_64)
+swift build -c release --product GooglyMac "${ARCHS[@]}"
 
 # Assemble and sign outside the project: iCloud-synced folders (like Documents) attach Finder
 # info to the bundle, which codesign rejects. The signed app is then copied into build/.
-FINAL="build/Bluey.app"
+FINAL="build/Fluffy.app"
 STAGE=$(mktemp -d)
-APP="$STAGE/Bluey.app"
+APP="$STAGE/Fluffy.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$(swift build -c release --show-bin-path)/GooglyMac" "$APP/Contents/MacOS/GooglyMac"
+cp "$(swift build -c release --product GooglyMac "${ARCHS[@]}" --show-bin-path)/GooglyMac" "$APP/Contents/MacOS/GooglyMac"
 cp Mac/Info.plist "$APP/Contents/Info.plist"
 cp Shared/Fonts/*.ttf "$APP/Contents/Resources/"
 

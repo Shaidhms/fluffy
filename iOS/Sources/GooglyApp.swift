@@ -34,7 +34,7 @@ struct RootView: View {
 
             SoundButton(link: link, live: live)
 
-            // Bluey's app: sessions, transcripts and settings.
+            // Fluffy's app: sessions, transcripts and settings.
             Button { showApp = true } label: {
                 Image(systemName: "square.grid.2x2.fill")
                     .font(.system(size: 14, weight: .semibold))
@@ -43,7 +43,7 @@ struct RootView: View {
                     .background(Circle().fill(Color.white.opacity(0.06)).frame(width: 34, height: 34))
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Open Bluey")
+            .accessibilityLabel("Open Fluffy")
             .padding(.top, 10)
             .padding(.trailing, 62)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
@@ -57,7 +57,7 @@ struct RootView: View {
         .ignoresSafeArea()
         .phoneChrome()
         .fullScreenCover(isPresented: $showApp) {
-            BlueyAppView(store: store, live: live, link: link) { showApp = false }
+            FluffyAppView(store: store, live: live, link: link) { showApp = false }
         }
         .onAppear {
             link.onFace = { [animator] face in animator.receive(face, at: Date().timeIntervalSinceReferenceDate) }
