@@ -6,10 +6,6 @@ A fluffy ginger cat who lives on your iPhone, sits under your Mac's screen, and 
 
 Talk to him through the phone. He can see your Mac's screen, point at things with his own cursor, look things up on the web, take meeting notes, and, when you ask, click, type and open apps for you. He's aloof and a little sassy about it, but he gets it done.
 
-> **Credit:** Fluffy is built on **Bluey** by Riley Brown, a blueberry character with the same brains.
-> Original project: [github.com/rbrown101010/bluey-by-riley](https://github.com/rbrown101010/bluey-by-riley).
-> Fluffy changes the character, colours and personality, and fixes a few issues on newer macOS. All the clever parts are Riley's.
-
 | Listening | Unimpressed | Pleased with himself | Napping |
 | --- | --- | --- | --- |
 | ![](docs/previews/fluffy/listening.png) | ![](docs/previews/fluffy/pointing.png) | ![](docs/previews/fluffy/happy.png) | ![](docs/previews/fluffy/resting.png) |
@@ -104,4 +100,8 @@ Your OpenAI key stays on your Mac in `~/Library/Application Support/Fluffy/keys.
 - `Shared/`: pairing between the two (Bonjour `_fluffy._tcp`) and the colours.
 - `scripts/preview/`: renders his moods to pictures (`docs/previews/fluffy/`).
 
-Built on [Bluey by Riley Brown](https://github.com/rbrown101010/bluey-by-riley). Fluffy by [Shaid](https://www.shaid360.com).
+## Credit
+
+> **Credit:** Fluffy is built on **Bluey** by Riley Brown, a blueberry character with the same brains.
+> Original project: [github.com/rbrown101010/bluey-by-riley](https://github.com/rbrown101010/bluey-by-riley).
+> Fluffy changes the character, colours and personality, and fixes a few issues on newer macOS. All the clever parts are Riley's.
